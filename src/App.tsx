@@ -1,35 +1,38 @@
 import React, { useEffect } from "react";
-import { useState } from "react";
-import {
-	AppProvider,
-	Button,
-	DisplayText,
-	Icon,
-	Page,
-	TextStyle,
-} from "@shopify/polaris";
-import { HeartMajor } from "@shopify/polaris-icons";
+import { AppProvider, DisplayText, Page, TextStyle } from "@shopify/polaris";
+import { post } from "./post";
+import PostCard from "./PostCard";
 
 export default function App() {
-	const [like, setlike] = useState("");
-	function likepost() {
-		setlike(like);
-	}
+	const [posts, setPosts] = React.useState<post[]>();
+
 	function getImages() {
 		var request = new XMLHttpRequest();
 		request.open(
 			"GET",
-			"https://api.nasa.gov/planetary/apod?api_key=fogFKIY61nIHNgmF884ZRh7c9F4rFsrai3Mitnaa"
+			"https://api.nasa.gov/planetary/apod?api_key=fogFKIY61nIHNgmF884ZRh7c9F4rFsrai3Mitnaa&count=5"
 		);
 		request.onload = function () {
-			var images = JSON.parse(this.response);
+			var response = JSON.parse(this.response);
 			if (request.status >= 200 && request.status < 400) {
+				setPosts(response);
 			} else {
 				console.log("error");
 			}
 		};
 		request.send();
 	}
+	useEffect(() => getImages(), []);
+
+	function loadmore() {
+		if (
+			window.innerHeight + document.documentElement.scrollTop ===
+			document.scrollingElement?.scrollHeight
+		) {
+			console.log("end of page");
+		}
+	}
+	loadmore();
 	return (
 		<AppProvider
 			i18n={{}}
@@ -49,10 +52,32 @@ export default function App() {
 			}}
 		>
 			<Page>
-				<DisplayText size="medium">
-					<TextStyle variation="strong">Spacestagram</TextStyle>
-					<Button onClick={() => getImages()}>Click me</Button>
-				</DisplayText>
+				<div
+					style={{
+						display: "flex",
+						justifyContent: "center",
+						alignContent: "center",
+						padding: 10,
+					}}
+				>
+					<DisplayText size="medium">
+						<TextStyle variation="strong">Spacestagram</TextStyle>
+					</DisplayText>
+				</div>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				>
+					{posts?.map((post, index) => (
+						<div style={{ marginTop: 25 }}>
+							<PostCard post={post}></PostCard>
+						</div>
+					))}
+				</div>
 			</Page>
 		</AppProvider>
 	);
