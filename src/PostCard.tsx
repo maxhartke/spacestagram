@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { MediaCard } from "@shopify/polaris";
+import { Key, MediaCard } from "@shopify/polaris";
 import React, { useState } from "react";
 import { post } from "./post";
 

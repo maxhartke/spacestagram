@@ -1,21 +1,34 @@
 import React, { useEffect } from "react";
-import { AppProvider, DisplayText, Page, TextStyle } from "@shopify/polaris";
+import {
+	AppProvider,
+	Button,
+	DisplayText,
+	Page,
+	TextStyle,
+} from "@shopify/polaris";
 import { post } from "./post";
 import PostCard from "./PostCard";
 
-export default function App() {
+export default function App(this: any) {
 	const [posts, setPosts] = React.useState<post[]>();
 
 	function getImages() {
 		var request = new XMLHttpRequest();
 		request.open(
 			"GET",
-			"https://api.nasa.gov/planetary/apod?api_key=fogFKIY61nIHNgmF884ZRh7c9F4rFsrai3Mitnaa&count=5"
+			"https://api.nasa.gov/planetary/apod?api_key=" +
+				process.env.REACT_APP_NASA_API_KEY +
+				"&count=5",
+			true
 		);
 		request.onload = function () {
 			var response = JSON.parse(this.response);
 			if (request.status >= 200 && request.status < 400) {
-				setPosts(response);
+				if (posts != null) {
+					setPosts(posts.concat(response));
+				} else {
+					setPosts(response);
+				}
 			} else {
 				console.log("error");
 			}
@@ -23,16 +36,6 @@ export default function App() {
 		request.send();
 	}
 	useEffect(() => getImages(), []);
-
-	function loadmore() {
-		if (
-			window.innerHeight + document.documentElement.scrollTop ===
-			document.scrollingElement?.scrollHeight
-		) {
-			console.log("end of page");
-		}
-	}
-	loadmore();
 	return (
 		<AppProvider
 			i18n={{}}
@@ -72,11 +75,14 @@ export default function App() {
 						alignItems: "center",
 					}}
 				>
-					{posts?.map((post, index) => (
-						<div style={{ marginTop: 25 }}>
+					{posts?.map((post) => (
+						<div key={post.date} style={{ marginTop: 25 }}>
 							<PostCard post={post}></PostCard>
 						</div>
 					))}
+					<div style={{ marginTop: 25 }}>
+						<Button onClick={() => getImages()}>Load More</Button>
+					</div>
 				</div>
 			</Page>
 		</AppProvider>
