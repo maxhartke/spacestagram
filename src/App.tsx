@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	AppProvider,
 	Button,
@@ -8,10 +8,11 @@ import {
 } from "@shopify/polaris";
 import { post } from "./post";
 import PostCard from "./PostCard";
+import { HeartFillIcon, HeartIcon } from "@primer/octicons-react";
 
 export default function App(this: any) {
 	const [posts, setPosts] = React.useState<post[]>();
-
+	const [like, setlike] = useState(true);
 	function getImages() {
 		var request = new XMLHttpRequest();
 		request.open(
@@ -75,6 +76,13 @@ export default function App(this: any) {
 						alignItems: "center",
 					}}
 				>
+					{/* <div onClick={() => setlike(!like)}>
+						{like ? (
+							<HeartIcon fill={"#24292E"} size={24} />
+						) : (
+							<HeartFillIcon fill={"#f00"} size={24} />
+						)}
+					</div> */}
 					{posts?.map((post) => (
 						<div key={post.date} style={{ marginTop: 25 }}>
 							<PostCard post={post}></PostCard>
