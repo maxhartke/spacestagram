@@ -4,9 +4,11 @@ import { MediaCard, Spinner } from "@shopify/polaris";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { post } from "./post";
+import { useWindowDimensions } from "./Skeleton";
 const PostCard = (props: { post: post }) => {
 	const [like, setlike] = useState(true);
 	const [isLoading, setisLoading] = useState(false);
+	const { height, width } = useWindowDimensions();
 	useEffect(() => {
 		const imageToLoad = new Image();
 		imageToLoad.src = props.post.hdurl;
@@ -16,7 +18,7 @@ const PostCard = (props: { post: post }) => {
 	}, []);
 
 	return (
-		<div style={{ width: 600 }}>
+		<div style={{ width: width > 600 ? 600 : 350 }}>
 			<MediaCard
 				title={props.post.title + " - " + props.post.date}
 				description={props.post.explanation ?? "null"}
@@ -41,8 +43,8 @@ const PostCard = (props: { post: post }) => {
 				) : (
 					<div
 						style={{
-							width: 600,
-							height: 400,
+							width: width > 600 ? 600 : 350,
+							height: width > 600 ? 400 : 200,
 							display: "flex",
 							justifyContent: "center",
 							alignItems: "center",
