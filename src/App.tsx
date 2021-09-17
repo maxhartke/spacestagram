@@ -42,7 +42,7 @@ export default function App(this: any) {
 		setisLoading(true);
 		getImages();
 	}
-	//useEffect(() => getImages(), []);
+	useEffect(() => getImages(), []);
 	return (
 		<AppProvider
 			i18n={{}}
