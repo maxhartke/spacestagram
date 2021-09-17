@@ -4,15 +4,16 @@ import {
 	Button,
 	DisplayText,
 	Page,
+	Spinner,
 	TextStyle,
 } from "@shopify/polaris";
 import { post } from "./post";
 import PostCard from "./PostCard";
-import { HeartFillIcon, HeartIcon } from "@primer/octicons-react";
+import Skeleton from "./Skeleton";
 
 export default function App(this: any) {
 	const [posts, setPosts] = React.useState<post[]>();
-	const [like, setlike] = useState(true);
+	const [isLoading, setisLoading] = useState(false);
 	function getImages() {
 		var request = new XMLHttpRequest();
 		request.open(
@@ -27,6 +28,7 @@ export default function App(this: any) {
 			if (request.status >= 200 && request.status < 400) {
 				if (posts != null) {
 					setPosts(posts.concat(response));
+					setisLoading(false);
 				} else {
 					setPosts(response);
 				}
@@ -36,7 +38,11 @@ export default function App(this: any) {
 		};
 		request.send();
 	}
-	useEffect(() => getImages(), []);
+	function loadMore() {
+		setisLoading(true);
+		getImages();
+	}
+	//useEffect(() => getImages(), []);
 	return (
 		<AppProvider
 			i18n={{}}
@@ -58,38 +64,30 @@ export default function App(this: any) {
 			<Page>
 				<div
 					style={{
-						display: "flex",
-						justifyContent: "center",
-						alignContent: "center",
-						padding: 10,
-					}}
-				>
-					<DisplayText size="medium">
-						<TextStyle variation="strong">Spacestagram</TextStyle>
-					</DisplayText>
-				</div>
-				<div
-					style={{
+						marginTop: 25,
 						display: "flex",
 						flexDirection: "column",
 						justifyContent: "center",
 						alignItems: "center",
 					}}
 				>
-					{/* <div onClick={() => setlike(!like)}>
-						{like ? (
-							<HeartIcon fill={"#24292E"} size={24} />
-						) : (
-							<HeartFillIcon fill={"#f00"} size={24} />
-						)}
-					</div> */}
+					<DisplayText size="medium">
+						<TextStyle variation="strong">Spacestagram</TextStyle>
+					</DisplayText>
+					{posts == null ? <Skeleton></Skeleton> : null}
 					{posts?.map((post) => (
 						<div key={post.date} style={{ marginTop: 25 }}>
 							<PostCard post={post}></PostCard>
 						</div>
 					))}
 					<div style={{ marginTop: 25 }}>
-						<Button onClick={() => getImages()}>Load More</Button>
+						{isLoading ? (
+							<Spinner accessibilityLabel="Spinner" size="large" />
+						) : (
+							<div style={{ display: posts != null ? "flex" : "none" }}>
+								<Button onClick={() => loadMore()}>Load More</Button>
+							</div>
+						)}
 					</div>
 				</div>
 			</Page>
