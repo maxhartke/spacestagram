@@ -2,10 +2,9 @@ import { MediaCard, SkeletonBodyText, SkeletonPage } from "@shopify/polaris";
 import { useEffect, useState } from "react";
 
 function getWindowDimensions() {
-	const { innerWidth: width, innerHeight: height } = window;
+	const { innerWidth: width } = window;
 	return {
 		width,
-		height,
 	};
 }
 
@@ -27,7 +26,7 @@ export function useWindowDimensions() {
 }
 
 const Skeleton = () => {
-	const { height, width } = useWindowDimensions();
+	const { width } = useWindowDimensions();
 	return (
 		<SkeletonPage title=" ">
 			<div

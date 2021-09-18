@@ -42,6 +42,7 @@ export default function App(this: any) {
 		setisLoading(true);
 		getImages();
 	}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => getImages(), []);
 	return (
 		<AppProvider

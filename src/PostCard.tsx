@@ -8,14 +8,14 @@ import { useWindowDimensions } from "./Skeleton";
 const PostCard = (props: { post: post }) => {
 	const [like, setlike] = useState(true);
 	const [isLoading, setisLoading] = useState(false);
-	const { height, width } = useWindowDimensions();
+	const { width } = useWindowDimensions();
 	useEffect(() => {
 		const imageToLoad = new Image();
-		imageToLoad.src = props.post.hdurl;
+		imageToLoad.src = props.post.url;
 		imageToLoad.onload = () => {
 			setisLoading(true);
 		};
-	}, []);
+	}, [props.post.url]);
 
 	return (
 		<div style={{ width: width > 600 ? 600 : 350 }}>
@@ -36,7 +36,7 @@ const PostCard = (props: { post: post }) => {
 							objectPosition: "center",
 						}}
 						src={
-							props.post.hdurl ??
+							props.post.url ??
 							"https://semantic-ui.com/images/wireframe/image.png"
 						}
 					/>
@@ -87,10 +87,10 @@ const PostCard = (props: { post: post }) => {
 							if (navigator.share) {
 								navigator.share({
 									title: props.post.title,
-									url: props.post.hdurl,
+									url: props.post.url,
 								});
 							} else {
-								alert(props.post.hdurl);
+								alert(props.post.url);
 							}
 						}}
 					>

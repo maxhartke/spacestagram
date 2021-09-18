@@ -1,6 +1,6 @@
 export interface post {
 	title: string | undefined;
 	date: string | undefined;
-	hdurl: string;
+	url: string;
 	explanation: string | undefined;
 }
